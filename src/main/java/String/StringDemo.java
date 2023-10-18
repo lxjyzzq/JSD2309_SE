@@ -42,7 +42,6 @@ public class StringDemo {
         System.out.println(s2==s6);
         System.out.println("*************");
 
-
         String q1 = "123abc";
         String q2 = "123abc";
         System.out.println(q1==q2);
@@ -59,6 +58,8 @@ public class StringDemo {
         String q = "123";
         String q6 = q + "abc";
         System.out.println(q2 == q6);
+
+
 
     }
 }
