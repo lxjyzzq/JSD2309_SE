@@ -16,7 +16,7 @@ public class test3 {
          * 程序启动后，输入上述两个地址后检查下面输出.
          * 分析并解决存在的问题，并写出错误原因:
          *
-         *
+         *使用equals处理字符串
          *
          */
         Scanner scanner = new Scanner(System.in);

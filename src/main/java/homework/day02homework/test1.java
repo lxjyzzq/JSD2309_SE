@@ -45,7 +45,7 @@ public class test1 {
                     System.out.println("年龄错误");
                 }
             }
-
+//纯数字的方法
 //            int age = scan.nextInt();
 //            if(1 <= age && 100 >= age){
 //                System.out.println("名字是："+name);
