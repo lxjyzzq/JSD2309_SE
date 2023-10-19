@@ -23,16 +23,13 @@ public class test3 {
         System.out.println("请输入地址:");
         String path = scanner.nextLine();
         if(path!=null) {
-            if(path == path1)
-            {
+            if(path.equals(path1)) {
                 System.out.println("处理注册!");
             }
-            else if(path == path2)
-            {
+            else if(path.equals(path2)) {
                 System.out.println("处理登录!");
             }
-            else
-            {
+            else {
                 System.out.println("输入地址有误!");
             }
         }

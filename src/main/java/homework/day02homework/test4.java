@@ -16,6 +16,7 @@ public class test4 {
          * 原因:
          */
         String num = "123 ";
+        num = "123";     //字符串有空格
         int d = Integer.parseInt(num);
         System.out.println(d);
 
@@ -23,14 +24,16 @@ public class test4 {
          * 原因:
          */
         num = "123.456";
+        num = "123";    //整型无法处理浮点型
         d = Integer.parseInt(num);
-        System.out.println(num);
+        System.out.println(num);  //需要输出d
+        System.out.println(d);  //需要输出d
 
         /*
          * 原因:
          */
-//		num = "123";
-//		d = Integer.parseInt(num)；
-//		System.out.println(d);
+		num = "123";
+		d = Integer.parseInt(num);
+		System.out.println(d);  //分号错误
     }
 }
