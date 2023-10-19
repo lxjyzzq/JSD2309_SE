@@ -1,4 +1,4 @@
-package String.day01homework;
+package homework.day01homework;
 /**
  * 实现方法,完成获取下列文件名中的后缀名
  * @author Xiloer

@@ -1,4 +1,4 @@
-package String.day01homework;
+package homework.day01homework;
 
 /**
  * 改正下面代码的逻辑错误
