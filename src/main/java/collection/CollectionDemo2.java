@@ -37,6 +37,10 @@ public class CollectionDemo2 {
         System.out.println("是否包含:"+c.contains(p));
 
 
+        //第一遍
+
+
+
 
     }
 }

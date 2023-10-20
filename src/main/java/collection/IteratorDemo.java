@@ -8,11 +8,14 @@ public class IteratorDemo {
     public static void main(String[] args) {
         Collection c = new ArrayList();
         c.add("a");
+        c.add("#");
         c.add("b");
+        c.add("#");
         c.add("c");
+        c.add("#");
         c.add("d");
+        c.add("#");
         c.add("e");
-        c.add("C#");
         System.out.println(c);
         /*
             迭代器使用时也要指定泛型,指定的类型与其遍历的集合元素类型一致即可
