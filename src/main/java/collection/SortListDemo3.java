@@ -34,8 +34,8 @@ public class SortListDemo3 {
         //自定义排序规则:字少的小，字多的大
         Comparator<String> com = new Comparator<String>(){
             public int compare(String o1, String o2) {
-//                return o1.length()-o2.length();
-                return o2.length()-o1.length();//反过来相减就实现了降序
+                return o1.length()-o2.length();
+//                return o2.length()-o1.length();//反过来相减就实现了降序
             }
         };
         Collections.sort(list,com);
