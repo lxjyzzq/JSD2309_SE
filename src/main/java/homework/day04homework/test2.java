@@ -22,6 +22,7 @@ public class test2 {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("请输入文件名:");
+
         while(true){
             String fileName = scanner.nextLine();
             File file = new File(fileName);
@@ -35,5 +36,6 @@ public class test2 {
             }
 
         }
+
     }
 }
