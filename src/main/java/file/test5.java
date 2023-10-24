@@ -2,23 +2,29 @@ package file;
 
 import java.io.File;
 
+/**
+ * 将demo目录删除
+ * 由于目录必须是空目录才可以删除
+ * 1:先获取test目录中的所有子项,遍历将他们全部删除
+ * 2:再将test目录删除
+ */
+
 public class test5 {
     public static void main(String[] args) {
-        /**
-         * 获取当前目录中名字里含有字母"e"的所有子项
-         */
+        File dir = new File("demo");
+        delFile(dir);
+        System.out.println("删除成功");
+    }
 
-        File dir = new File(".");
-//        File[] subs = dir.listFiles(f->f.getName().indexOf("e")!=-1);
-        /*
-            String提供的方法:
-            boolean contains(String s)
-            判断当前字符串中是否包含给定字符串,若包含则返回true
-         */
-        File[] subs = dir.listFiles(f->f.getName().contains("e"));
-        for (File sub : subs){
-            System.out.println(sub.getName());
+    public static void delFile(File file){
+        if(file.isDirectory()){
+            File[] subs = file.listFiles();
+            for (File sub: subs) {
+                delFile(sub);
+            }
+            file.delete();
         }
+        file.delete();
     }
 }
 
