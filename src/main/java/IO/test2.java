@@ -14,12 +14,12 @@ public class test2 {
 
     public static void main(String[] args) throws IOException {
 
-        FileOutputStream fos = new FileOutputStream("note.txt");
+//        FileOutputStream fos = new FileOutputStream("note.txt"); //换行
+        FileOutputStream fos = new FileOutputStream("note.txt",true);   //不换行
         Scanner scan = new Scanner(System.in);
         String line = scan.nextLine();
         while(!line.contentEquals("exit")){
-            byte[] data = line.getBytes(StandardCharsets.UTF_8);
-            fos.write(data);
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
             line = scan.nextLine();
         }
         fos.close();
