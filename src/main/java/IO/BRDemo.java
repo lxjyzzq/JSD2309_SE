@@ -42,5 +42,54 @@ public class BRDemo {
         }
 
         br.close();
+
+        //第五遍
+        FileInputStream fis5 = new FileInputStream("./src/main/java/io/BRDemo.java");
+        InputStreamReader isr5 = new InputStreamReader(fis5);
+        BufferedReader br5 = new BufferedReader(isr5);
+        while ((line = br5.readLine())!= null){
+            System.out.println(line);
+        }
+        br5.close();
+
+        //第四遍
+        FileInputStream fis4 = new FileInputStream("./src/main/java/io/BRDemo.java");
+        InputStreamReader isr4 = new InputStreamReader(fis4);
+        BufferedReader br4 = new BufferedReader(isr4);
+        while ((line = br4.readLine())!= null){
+            System.out.println(line);
+        }
+        br4.close();
+
+        //第三遍
+        FileInputStream fis3 = new FileInputStream("./src/main/java/io/BRDemo.java");
+        InputStreamReader isr3 = new InputStreamReader(fis3);
+        BufferedReader br3 = new BufferedReader(isr3);
+        while ((line = br3.readLine())!=null){
+            System.out.println(line);
+        }
+        br3.close();
+
+        //第二遍
+        FileInputStream fis2 = new FileInputStream("./src/main/java/io/BRDemo.java");
+        InputStreamReader isr2 = new InputStreamReader(fis2,StandardCharsets.UTF_8);
+        BufferedReader br2 = new BufferedReader(isr2);
+        while ((line = br2.readLine())!= null){
+            System.out.println(line);
+        }
+        br2.close();
+
+
+        //第一遍
+        FileInputStream fis1 = new FileInputStream("./src/main/java/io/BRDemo.java");
+        InputStreamReader isr1 = new InputStreamReader(fis1,StandardCharsets.UTF_8);
+        BufferedReader br1 = new BufferedReader(isr1);
+
+        while ((line = br1.readLine())!=null){
+            System.out.println(line);
+        }
+        br1.close();
+
+
     }
 }
