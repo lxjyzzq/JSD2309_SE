@@ -15,10 +15,6 @@ public class Server {
     private ServerSocket serverSocket;
     //构造器用来初始化服务器
 
-
-    private List<PrintWriter> allOut = new ArrayList<>();
-
-
     public Server(){
         try {
             System.out.println("正在启动服务端...");
