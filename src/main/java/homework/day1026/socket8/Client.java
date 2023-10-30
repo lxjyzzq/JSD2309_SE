@@ -10,7 +10,7 @@ public class Client {
     public Client(){
         try {
             System.out.println("正在连接服务端.....");
-            socket = new Socket("127.0.0.1", 5888);
+            socket = new Socket("127.0.0.1", 8088);
             System.out.println("连接服务端成功......");
         } catch (IOException e) {
             throw new RuntimeException(e);
