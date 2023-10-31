@@ -1,12 +1,11 @@
 package socket;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 聊天室服务端
@@ -21,6 +20,8 @@ public class Server {
      * 如果我们把Socket比喻为电话插座,那么ServerSocket相当于是"总机"
      */
     private ServerSocket serverSocket;
+
+    private List<PrintWriter> allOut = new ArrayList<>();
     //构造器用来初始化服务端
     public Server(){
         try {
@@ -87,13 +88,22 @@ public class Server {
                 //单独读取来自客户端发送过来的第一行字符串，这个是昵称
                 nickName = br.readLine();
 
+                //创建输出流
+                OutputStream out = socket.getOutputStream();
+                OutputStreamWriter osw = new OutputStreamWriter(out,StandardCharsets.UTF_8);
+                BufferedWriter bw = new BufferedWriter(osw);
+                PrintWriter pw = new PrintWriter(bw,true);
+                //将输出流存入共享集合allOut中
+                allOut.add(pw);
+
+
+
                 String line;
                 /*
                     当调用缓冲输入流的readLin方法读取对方发送过来一行字符串的操作时,可能由于
                     对方的断开方法不同,导致不同的效果:
                     如果对方是异常断开(没有进行4次挥手):此时readLine方法会抛出异常:java.net.SocketException: Connection reset
                     如果对方正常断开(进行了4次挥手):此时readLine方法会返回null
-
                     该方法也存在阻塞现象
                     当我们调用readLine方法读取对方发送过来一行字符串时,该方法会进入阻塞等待,直到
                     对方确实发送了一行数据过来才会解除阻塞并将这一行字符串立即返回
@@ -101,11 +111,14 @@ public class Server {
                 while ((line = br.readLine()) != null) {
                     //传奇(192.168.2.125)说:XXXXXXXXXXXXXX
                     System.out.println(nickName + "(" + host + ")说:" + line);
+                    for (PrintWriter o : allOut) {
+                        o.println(nickName+"("+host+")说"+line);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
 }
+

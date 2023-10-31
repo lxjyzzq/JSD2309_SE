@@ -25,7 +25,8 @@ public class Client {
                 参数2:服务端程序打开的端口
                 如果连接失败会抛出异常
              */
-            socket = new Socket("localhost",8088);
+//            socket = new Socket("127.0.0.1",8088);
+            socket = new Socket("172.18.12.153",8088);
             System.out.println("服务端已连接");
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,6 +44,9 @@ public class Client {
             OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
             BufferedWriter bw = new BufferedWriter(osw);
             PrintWriter pw = new PrintWriter(bw,true);
+
+
+
 
             Scanner scanner = new Scanner(System.in);
 
@@ -62,11 +66,17 @@ public class Client {
 
             System.out.println("欢迎你["+nickName+"],开始聊天吧!");
             while(true) {
+                InputStream in = socket.getInputStream();
+                InputStreamReader isr = new InputStreamReader(in,StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+
                 String line = scanner.nextLine();
                 if("exit".equalsIgnoreCase(line)){
                     break;
                 }
                 pw.println(line);
+                line = br.readLine();   //读取服务端发送回来的一行字符串
+                System.out.println(line);   //输出到客户端控制台上
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,8 +90,6 @@ public class Client {
                 e.printStackTrace();
             }
         }
-
-
     }
 
     public static void main(String[] args) {
@@ -89,17 +97,4 @@ public class Client {
         client.start();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
