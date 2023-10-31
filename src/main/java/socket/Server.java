@@ -4,8 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 聊天室服务端
@@ -21,7 +20,9 @@ public class Server {
      */
     private ServerSocket serverSocket;
 
-    private List<PrintWriter> allOut = new ArrayList<>();
+//    private List<PrintWriter> allOut = new ArrayList<>();
+
+    private Map<String ,PrintWriter> allOut = new HashMap<>();
     //构造器用来初始化服务端
     public Server(){
         try {
@@ -75,6 +76,7 @@ public class Server {
             host = socket.getInetAddress().getHostAddress();
         }
         public void run(){
+            PrintWriter pw = null;
             try {
                 /*
                     Socket的重要方法:
@@ -92,11 +94,15 @@ public class Server {
                 OutputStream out = socket.getOutputStream();
                 OutputStreamWriter osw = new OutputStreamWriter(out,StandardCharsets.UTF_8);
                 BufferedWriter bw = new BufferedWriter(osw);
-                PrintWriter pw = new PrintWriter(bw,true);
+                pw = new PrintWriter(bw,true);
                 //将输出流存入共享集合allOut中
-                allOut.add(pw);
+                synchronized (allOut){
 
+                    allOut.put(nickName, pw);
 
+                }
+
+                sendMessage(nickName+"("+host+")上线了！当前人数："+allOut.size());
 
                 String line;
                 /*
@@ -109,14 +115,67 @@ public class Server {
                     对方确实发送了一行数据过来才会解除阻塞并将这一行字符串立即返回
                  */
                 while ((line = br.readLine()) != null) {
-                    //传奇(192.168.2.125)说:XXXXXXXXXXXXXX
-                    System.out.println(nickName + "(" + host + ")说:" + line);
-                    for (PrintWriter o : allOut) {
-                        o.println(nickName+"("+host+")说"+line);
+                    /*
+                    客户端发送的消息会有两种形式
+                    群发：直接发送
+                    私聊：@对方昵称：聊天内容
+                     */
+                    if(line.startsWith("@")){
+                        sendMessageToSB(line, pw);
+                    }
+                    else {
+                        sendMessage(nickName + "(" + host + ")说:" + line);
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(nickName+"("+host+")异常断开了");
+            }finally {
+                //处理当前客户端断开连接后的操作
+                //将客户端的输出流从共享集合allOut中删除
+                synchronized (allOut){
+//                    allOut.remove(pw);
+                    allOut.remove(nickName);
+                }
+
+                //广播该客户端下线了
+                sendMessage(nickName+"("+host+")下线了！当前在线人数"+allOut.size());
+                //关闭socket
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        private void sendMessage(String message){
+
+            //现将消息在服务端控制台上打桩输出
+            System.out.println(message);
+            synchronized (allOut) {
+//                for (PrintWriter o : allOut) {
+//                    o.println(message);
+//                }
+                //遍历map中所有的value（所有客户端都输出流）
+                Collection<PrintWriter> c = allOut.values();
+                for (PrintWriter o: c) {
+                    o.println(message);
+                }
+            }
+        }
+
+        private void sendMessageToSB(String message,PrintWriter pw){
+            //message的格式：@对方昵称：聊天内容
+            //1：截取出昵称（从message第二个字符开始截取到“：”）
+            String toNickName = message.substring(1,message.indexOf(":"));
+            //截取聊天信息（从message截取到结尾）
+            String toMessage = message.substring(message.indexOf(":")+1);
+            if(allOut.containsKey(toNickName)){
+                pw = allOut.get(toNickName);
+                pw.println(nickName+"悄悄对你说"+toMessage);   //xx对你说：聊天信息
+            }
+            else {
+                pw.println("[系统提示]："+toNickName+"，不存在");
             }
         }
     }

@@ -26,7 +26,7 @@ public class Client {
                 如果连接失败会抛出异常
              */
 //            socket = new Socket("127.0.0.1",8088);
-            socket = new Socket("172.18.12.153",8088);
+            socket = new Socket("172.18.12.157",8088);
             System.out.println("服务端已连接");
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,9 +45,6 @@ public class Client {
             BufferedWriter bw = new BufferedWriter(osw);
             PrintWriter pw = new PrintWriter(bw,true);
 
-
-
-
             Scanner scanner = new Scanner(System.in);
 
             //首先要求用户输入昵称，并将其发送给服务端
@@ -65,24 +62,25 @@ public class Client {
             }
 
             System.out.println("欢迎你["+nickName+"],开始聊天吧!");
-            while(true) {
-                InputStream in = socket.getInputStream();
-                InputStreamReader isr = new InputStreamReader(in,StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(isr);
 
+            //启动线程来接收服务端发送过来的聊天消息
+            ServerHandler handler = new ServerHandler();
+            Thread t = new Thread(handler);
+            t.setDaemon(true);
+            t.start();
+
+            while(true) {
                 String line = scanner.nextLine();
                 if("exit".equalsIgnoreCase(line)){
                     break;
                 }
                 pw.println(line);
-                line = br.readLine();   //读取服务端发送回来的一行字符串
-                System.out.println(line);   //输出到客户端控制台上
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                /*
+            try {                /*
                     当准备断开连接时要调用socket的close方法.内部会进行与对方的四次挥手操作
                  */
                 socket.close();
@@ -95,6 +93,27 @@ public class Client {
     public static void main(String[] args) {
         Client client = new Client();
         client.start();
+    }
+
+    /*
+    该线程负责读取来自服务端发送过来的聊天消息
+     */
+    private class ServerHandler implements Runnable{
+        public void run(){
+            try {
+                InputStream in = socket.getInputStream();
+                InputStreamReader isr = new InputStreamReader(in,StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+
+                String message;
+                while ((message = br.readLine())!=null){
+                    System.out.println(message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
 
