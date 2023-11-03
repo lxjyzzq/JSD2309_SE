@@ -1,4 +1,6 @@
-package homework.day1103.socket3;
+package homework.day1103.socket1;
+
+import socket.Client;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,9 +16,9 @@ public class Server {
 
     public Server(){
         try {
-            System.out.println("正在启动服务端.......");
-            serverSocket = new ServerSocket(8888);
-            System.out.println("服务端启动完毕....");
+            System.out.println("正在启动服务端...");
+            serverSocket = new ServerSocket(7777);
+            System.out.println("服务启动完毕");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -25,9 +27,9 @@ public class Server {
     public void start(){
         try {
             while (true){
-                System.out.println("wait to connect....");
+                System.out.println("等待客户端连接...");
                 Socket socket = serverSocket.accept();
-                System.out.println("one client connected...");
+                System.out.println("一个客户端连接了");
                 ClientHandler handler = new ClientHandler(socket);
                 Thread t = new Thread(handler);
                 t.start();
@@ -37,16 +39,10 @@ public class Server {
         }
     }
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.start();
-    }
-
     private class ClientHandler implements Runnable{
         private Socket socket;
         private String host;
         private String nickName;
-
         public ClientHandler(Socket socket){
             this.socket = socket;
             host = socket.getInetAddress().getHostAddress();
@@ -61,30 +57,28 @@ public class Server {
                 nickName = br.readLine();
 
                 OutputStream out = socket.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(out,StandardCharsets.UTF_8);
+                OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                 BufferedWriter bw = new BufferedWriter(osw);
                 pw = new PrintWriter(bw, true);
                 synchronized (allOut){
-                    allOut.put(nickName, pw);
+                    allOut.put(nickName,pw);
                 }
-
-                sendMessage(nickName+"("+host+")上线了！当前在线人数："+allOut.size());
+                sendMessage(nickName+"("+host+")上线了,当前在线人数："+allOut.size());
                 String line;
                 while ((line = br.readLine())!= null){
-                    if(line.startsWith("@")){
+                    if(line.equalsIgnoreCase("@")){
                         sendMessageToSB(line,pw);
                     }else {
                         sendMessage(nickName+"("+host+")说："+line);
                     }
                 }
-
             } catch (IOException e) {
-                System.out.println(nickName+"("+host+")断开了");
+                System.out.println(nickName+"("+host+")异常断开了");
             }finally {
                 synchronized (allOut){
                     allOut.remove(nickName);
                 }
-                sendMessage(nickName+"("+host+")下线了！当前在线人数："+allOut.size());
+                sendMessage(nickName+"("+host+")下线了,当前人数"+allOut.size());
             }
             try {
                 socket.close();
@@ -92,28 +86,33 @@ public class Server {
                 throw new RuntimeException(e);
             }
 
-
         }
 
-        private void sendMessageToSB(String message,PrintWriter pw){
+        private void sendMessageToSB(String message, PrintWriter pw){
             String toNickName = message.substring(1,message.indexOf(":"));
             String toMessage = message.substring(message.indexOf(":")+1);
             if(allOut.containsKey(toNickName)){
                 pw = allOut.get(toNickName);
-                pw.println(nickName+"small say"+toMessage);
-            }
-            else {
-                pw.println("Warning"+ toNickName+"is not exit");
+                pw.println(nickName+"悄悄说:"+toMessage);
+            }else {
+                pw.println("系统提示："+nickName+"不存在");
             }
         }
-        
+
         private void sendMessage(String message){
             System.out.println(message);
-            Collection<PrintWriter> c = allOut.values();
-            for (PrintWriter o :
-                    c) {
-                o.println(message);
+            synchronized (allOut){
+                Collection<PrintWriter> c = allOut.values();
+                for (PrintWriter o:
+                     c) {
+                    o.println(message);
+                }
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Server server = new Server();
+        server.start();
     }
 }
