@@ -1,7 +1,5 @@
 package homework.day1031.socket1;
 
-import javafx.beans.binding.When;
-
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +10,7 @@ public class Client {
     public Client(){
         try {
             System.out.println("正在连接服务器......");
-            socket = new Socket("127.0.0.1",8808);
+            socket = new Socket("127.0.0.1",7777);
             System.out.println("服务端已连接.....");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -76,5 +74,4 @@ public class Client {
             }
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package homework.day1031.example;
+package homework.day1103.example;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -26,9 +26,9 @@ public class Server {
     public void start(){
         try {
             while(true) {
-                System.out.println("等待客户端连接...");
+                System.out.println("wait to connnect...");
                 Socket socket = serverSocket.accept();
-                System.out.println("一个客户端连接了");
+                System.out.println("one client connected");
                 //启动一个线程来处理与该客户端的交互
                 ClientHandler handler = new ClientHandler(socket);
                 Thread t = new Thread(handler);
